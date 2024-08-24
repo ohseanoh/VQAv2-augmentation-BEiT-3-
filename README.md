@@ -59,11 +59,33 @@ inference:
         --dist_eval 2>&1 | tee "$LOGFILE"
     mv "${OUTPUT_DIR}/submit_vqav2_test.json" "${OUTPUT_DIR}/submit_vqav2_test_flip2flip_${TIMESTAMP}.json"
     ```
+    
     ```bash
-    이미지 augmentation: python augment.py > output.log 2> error.log
-    텍스트 augmentation: json_arranging.ipynb
-    index_file 생성: python generate_index_files.py > output.log 2> error.log
-    ```
+python -m torch.distributed.launch --nproc_per_node=8 run_beit3_finetuning.py \
+        --model beit3_large_patch16_480 \
+        --input_size 480 \
+        --task vqav2 \
+        --batch_size 16 \
+        --layer_decay 1.0 \
+        --lr 2e-5 \
+        --update_freq 1 \
+        --randaug \
+        --epochs 10 \
+        --warmup_epochs 1 \
+        --drop_path 0.15 \
+        --sentencepiece_model /your_beit3_model_path/beit3.spm \
+        --finetune /your_beit3_model_path/beit3_large_patch16_224.pth \
+        --data_path /path/to/your_data \
+        --output_dir /path/to/save/your_model \
+        --log_dir /path/to/save/your_model/log \
+        --weight_decay 0.01 \
+        --seed 42 \
+        --save_ckpt_freq 5 \
+        --task_head_lr_weight 20 \
+        --opt_betas 0.9 0.98 \
+        --enable_deepspeed \
+        --checkpoint_activations
+```
     
 train:
     ```bash
