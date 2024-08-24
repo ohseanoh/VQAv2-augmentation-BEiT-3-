@@ -18,7 +18,7 @@ implementing data augmentation for better VQA.
     ```bash
     git clone https://github.com/microsoft/unilm.git
     cd unilm/beit3
-    conda create -n beit pythone=3.8 -y
+    conda create -n beit python=3.8 -y
     pip install -r requirements.txt
     pip install protobuf==3.20.*
     utils.py의 24번째 줄 torch._six -> torch
@@ -26,7 +26,7 @@ implementing data augmentation for better VQA.
 2. custom dataset & models:
     ```bash
     datasets.py의 701번째 줄 task2dataset에 "vqav2_aug": VQAv2Dataset, "vqav2_flip": VQAv2Dataset, 추가
-    engine_for_finetuning.py의 442번째 줄 get_handler에 elif args.task == "vqav2" or args.task == "vqav2_aug" or args.task == "vqav2_flip"
+    engine_for_finetuning.py의 442번째 줄 get_handler에 or args.task == "vqav2_aug" or args.task == "vqav2_flip" 추가
     modeling_finetune.py의 @register_model에 answer2label의 class수에 맞는 num_classes 할당한 모델들 추가
     run_beit3_finetuning.py의 38번째 줄 parser.add_argument('--task'에 'vqav2_aug', 'vqav2_flip', 추가
     run_beit3_finetuning.py의 367번째 줄 args.task == "vqav2_aug", args.task == "vqav2_flip" 추가
