@@ -40,29 +40,17 @@ implementing data augmentation for better VQA.
 
 ## Command
 
+inference:
 ```bash
-python -m torch.distributed.launch --nproc_per_node=8 run_beit3_finetuning.py \
-        --model beit3_large_patch16_480 \
-        --input_size 480 \
-        --task vqav2 \
-        --batch_size 16 \
-        --layer_decay 1.0 \
-        --lr 2e-5 \
-        --update_freq 1 \
-        --randaug \
-        --epochs 10 \
-        --warmup_epochs 1 \
-        --drop_path 0.15 \
-        --sentencepiece_model /your_beit3_model_path/beit3.spm \
-        --finetune /your_beit3_model_path/beit3_large_patch16_224.pth \
-        --data_path /path/to/your_data \
-        --output_dir /path/to/save/your_model \
-        --log_dir /path/to/save/your_model/log \
-        --weight_decay 0.01 \
-        --seed 42 \
-        --save_ckpt_freq 5 \
-        --task_head_lr_weight 20 \
-        --opt_betas 0.9 0.98 \
-        --enable_deepspeed \
-        --checkpoint_activations
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --nproc_per_node=8 /home/seanoh/unilm/beit3/run_beit3_finetuning.py \
+    --model beit3_base_patch16_480 \
+    --input_size 480 \
+    --task vqav2 \
+    --batch_size 16 \
+    --sentencepiece_model /home/seanoh/unilm/beit3/models/beit3.spm \
+    --finetune /home/seanoh/unilm/beit3/finetuned/checkpoint_best_flip.pth \
+    --data_path /data/Shared_Data/VQAv2_flip \
+    --output_dir "${OUTPUT_DIR}" \
+    --eval \
+    --dist_eval 2>&1 | tee "$LOGFILE"
 ```
