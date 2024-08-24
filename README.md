@@ -58,7 +58,12 @@ inference:
         --eval \
         --dist_eval 2>&1 | tee "$LOGFILE"
     mv "${OUTPUT_DIR}/submit_vqav2_test.json" "${OUTPUT_DIR}/submit_vqav2_test_flip2flip_${TIMESTAMP}.json"
-
+    ```
+    ```bash
+    이미지 augmentation: python augment.py > output.log 2> error.log
+    텍스트 augmentation: json_arranging.ipynb
+    index_file 생성: python generate_index_files.py > output.log 2> error.log
+    ```
     
 train:
     ```bash
