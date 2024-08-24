@@ -40,8 +40,7 @@ implementing data augmentation for better VQA.
 
 ## Command
 
-inference:
-    ```bash
+```bash
 python -m torch.distributed.launch --nproc_per_node=8 run_beit3_finetuning.py \
         --model beit3_large_patch16_480 \
         --input_size 480 \
@@ -67,54 +66,3 @@ python -m torch.distributed.launch --nproc_per_node=8 run_beit3_finetuning.py \
         --enable_deepspeed \
         --checkpoint_activations
 ```
-
-    ```bash
-    TIMESTAMP=$(date +'%Y%m%d_%H%M')
-    LOGFILE="/home/seanoh/unilm/beit3/logs/evaluation_${TIMESTAMP}.log"
-    OUTPUT_DIR="/home/seanoh/unilm/beit3/predictions"
-    export OMP_NUM_THREADS=16
-    CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --nproc_per_node=8 /home/seanoh/unilm/beit3/run_beit3_finetuning.py \
-        --model beit3_base_patch16_480 \
-        --input_size 480 \
-        --task vqav2 \
-        --batch_size 16 \
-        --sentencepiece_model /home/seanoh/unilm/beit3/models/beit3.spm \
-        --finetune /home/seanoh/unilm/beit3/finetuned/checkpoint_best_flip.pth \
-        --data_path /data/Shared_Data/VQAv2_flip \
-        --output_dir "${OUTPUT_DIR}" \
-        --eval \
-        --dist_eval 2>&1 | tee "$LOGFILE"
-    mv "${OUTPUT_DIR}/submit_vqav2_test.json" "${OUTPUT_DIR}/submit_vqav2_test_flip2flip_${TIMESTAMP}.json"
-    ```
-    
-    
-    
-train:
-    ```bash
-    TIMESTAMP=$(date +'%Y%m%d_%H%M')
-    LOGFILE_DIR="/home/seanoh/unilm/beit3/logs/finetuning_${TIMESTAMP}"
-    LOGFILE="${LOGFILE_DIR}.log"
-    export OMP_NUM_THREADS=16
-    CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --nproc_per_node=8 /home/seanoh/unilm/beit3/run_beit3_finetuning.py \
-        --model beit3_base_patch16_480_vqav2 \
-        --input_size 480 \
-        --task vqav2 \
-        --batch_size 8 \
-        --layer_decay 1.0 \
-        --lr 3e-5 \
-        --update_freq 1 \
-        --epochs 10 \
-        --warmup_epochs 1 \
-        --drop_path 0.1 \
-        --sentencepiece_model /home/seanoh/unilm/beit3/models/beit3.spm \
-        --finetune /home/seanoh/unilm/beit3/models/beit3_base_patch16_224.pth \
-        --data_path /data/Shared_Data/VQAv2 \
-        --output_dir "/home/seanoh/unilm/beit3/finetuned" \
-        --log_dir "$LOGFILE_DIR" \
-        --weight_decay 0.01 \
-        --seed 42 \
-        --save_ckpt_freq 5 \
-        --task_head_lr_weight 20 \
-        --opt_betas 0.9 0.98 \
-    2>&1 | tee "$LOGFILE"
-
