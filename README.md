@@ -41,7 +41,7 @@ implementing data augmentation for better VQA.
 ## Command
 
 inference:
-    '''bash
+    ```bash
     TIMESTAMP=$(date +'%Y%m%d_%H%M')
     LOGFILE="/home/seanoh/unilm/beit3/logs/evaluation_${TIMESTAMP}.log"
     OUTPUT_DIR="/home/seanoh/unilm/beit3/predictions"
@@ -58,7 +58,7 @@ inference:
         --eval \
         --dist_eval 2>&1 | tee "$LOGFILE"
     mv "${OUTPUT_DIR}/submit_vqav2_test.json" "${OUTPUT_DIR}/submit_vqav2_test_flip2flip_${TIMESTAMP}.json"
-    '''
+    ```
     
 train:
     ```bash
@@ -88,4 +88,4 @@ train:
         --task_head_lr_weight 20 \
         --opt_betas 0.9 0.98 \
     2>&1 | tee "$LOGFILE"
-    '''
+    ```
